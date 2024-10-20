@@ -8,12 +8,16 @@ import org.agrona.concurrent.UnsafeBuffer;
 
 import java.nio.ByteBuffer;
 
-public class CancelChildOrder implements Action{
+public class CancelChildOrder implements Action {
 
     private final ChildOrder orderToCancel;
 
     public CancelChildOrder(ChildOrder orderToCancel) {
         this.orderToCancel = orderToCancel;
+    }
+
+    public long getOrderId() {
+        return orderToCancel.getOrderId(); // retrieves the order id
     }
 
     @Override
