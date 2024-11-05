@@ -4,6 +4,7 @@ import codingblackfemales.container.RunTrigger;
 import codingblackfemales.sequencer.event.OrderEventListener;
 import codingblackfemales.sotw.ChildOrder;
 import codingblackfemales.sotw.OrderState;
+import codingblackfemales.sotw.OrderStatus;
 import messages.order.*;
 
 import java.util.LinkedList;
@@ -12,27 +13,25 @@ import java.util.List;
 public class OrderService extends OrderEventListener {
 
     private final RunTrigger runTrigger;
-
     private List<ChildOrder> children = new LinkedList<>();
 
     public OrderService(RunTrigger runTrigger) {
         this.runTrigger = runTrigger;
     }
 
-
-    private void triggerRun(){
+    private void triggerRun() {
         runTrigger.triggerRun();
     }
 
-    private ChildOrder createChildOrder(final CreateOrderDecoder create){
-        return new ChildOrder(create.side(), create.orderId(), create.quantity(), create.price(), OrderState.PENDING);
+    private ChildOrder createChildOrder(final CreateOrderDecoder create) {
+        return new ChildOrder(create.side(), create.orderId(), create.quantity(), create.price(), OrderStatus.PENDING);
     }
 
-    private void updateState(ChildOrder child, int state){
+    private void updateState(ChildOrder child, int state) {
         child.setState(state);
     }
 
-    private void addChildFill(ChildOrder child, long filledQuantity, long filledPrice){
+    private void addChildFill(ChildOrder child, long filledQuantity, long filledPrice) {
         child.addFill(filledQuantity, filledPrice);
     }
 
@@ -42,8 +41,10 @@ public class OrderService extends OrderEventListener {
         triggerRun();
     }
 
-    private ChildOrder find(long orderId){
-        return children.stream().filter( order -> order.getOrderId() == orderId).findFirst().get();
+    private ChildOrder find(long orderId) {
+        return children.stream().filter(order -> order.getOrderId() == orderId).findFirst().orElse(null); // Use orElse
+                                                                                                          // to avoid
+                                                                                                          // NoSuchElementException
     }
 
     @Override
@@ -70,7 +71,7 @@ public class OrderService extends OrderEventListener {
         triggerRun();
     }
 
-    public List<ChildOrder> children(){
+    public List<ChildOrder> children() {
         return this.children;
     }
 

@@ -55,6 +55,8 @@ public class SimpleAlgoStateImpl implements SimpleAlgoState {
 
     @Override
     public List<ChildOrder> getActiveChildOrders() {
-        return orderService.children().stream().filter(order -> order.getState() != OrderState.CANCELLED).collect(Collectors.toList());
+        return orderService.children().stream()
+                .filter(order -> order.getStatus() != OrderStatus.CANCELED) // Use getStatus() instead of getState()
+                .collect(Collectors.toList());
     }
 }

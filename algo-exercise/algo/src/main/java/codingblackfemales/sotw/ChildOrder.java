@@ -40,6 +40,10 @@ public class ChildOrder {
         return orderStatus;
     }
 
+    public OrderStatus getState() { // New method to get the state
+        return this.orderStatus; // Return the current order status
+    }
+
     public Side getSide() {
         return side;
     }
@@ -71,6 +75,11 @@ public class ChildOrder {
     // Add a method to update order status if needed
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    // New method to set state using an integer
+    public void setState(int state) {
+        this.orderStatus = OrderStatus.fromInt(state); // Convert int to OrderStatus
     }
 
     public void addFill(long filledQuantity, long filledPrice) {

@@ -13,22 +13,35 @@ import java.nio.ByteBuffer;
 public class CreateChildOrder implements Action {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateChildOrder.class);
-    private final long quantity;
-    private final long price;
+    private final long quantity; // Quantity of the order
+    private final long price; // Price at which the order will be placed
+    private final Side side; // Side of the order (BUY/SELL)
 
-    private final Side side;
-
-
-
+    // Constructor to initialize the fields
     public CreateChildOrder(final Side side, final long quantity, final long price) {
         this.quantity = quantity;
         this.price = price;
         this.side = side;
     }
 
+    // Getter for quantity
+    public long getQuantity() {
+        return quantity;
+    }
+
+    // Getter for price
+    public long getPrice() {
+        return price;
+    }
+
+    // Getter for side
+    public Side getSide() {
+        return side;
+    }
+
     @Override
     public String toString() {
-        return "CreateChildOrder(side=" + side + ",quantity=" + quantity + ",price=" + price + ")";
+        return "CreateChildOrder(side=" + side + ", quantity=" + quantity + ", price=" + price + ")";
     }
 
     @Override
@@ -38,12 +51,13 @@ public class CreateChildOrder implements Action {
         final UnsafeBuffer directBuffer = new UnsafeBuffer(byteBuffer);
         final MessageHeaderEncoder headerEncoder = new MessageHeaderEncoder();
 
+        // Wrap and apply the message header
         encoder.wrapAndApplyHeader(directBuffer, 0, headerEncoder);
         headerEncoder.schemaId(CreateOrderEncoder.SCHEMA_ID);
         headerEncoder.version(CreateOrderEncoder.SCHEMA_VERSION);
         encoder.price(price);
         encoder.quantity(quantity);
         encoder.side(side);
-        sequencer.onCommand(directBuffer);
+        sequencer.onCommand(directBuffer); // Send the command to the sequencer
     }
 }
